@@ -24,6 +24,6 @@ This is a Streamlit application for recommending products based on a selected ca
 
 - `app.py`: Main application file.
 - `logging_config.py`: Logging configuration.
-- `requirements.txt`: List of dependencies.
+- `requirements.txt`: List of dependencies including BeautifulSoup.
 - `.gitignore`: Git ignore file.
 - `README.md`: Project overview.

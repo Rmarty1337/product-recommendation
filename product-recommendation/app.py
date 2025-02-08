@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import logging
 from logging_config import setup_logging
+from bs4 import BeautifulSoup
 
 # Setup logging
 setup_logging()
@@ -32,8 +33,10 @@ def load_data():
 
 def clean_description(description):
     """Clean up the product description."""
-    # Add any cleaning steps here, e.g., removing extra whitespace
-    return description.strip()
+    # Use BeautifulSoup to remove HTML tags
+    soup = BeautifulSoup(description, "html.parser")
+    cleaned_description = soup.get_text(separator=" ").strip()
+    return cleaned_description
 
 # Load product data
 products = load_data()
@@ -59,13 +62,18 @@ if {'id', 'description', 'related'}.issubset(products.columns):
 
             # Display related products
             st.write("### 🏷️ Related Products:")
+            related_products = []
             for rel_id in selected_product['related']:
                 rel_product = products[products['id'] == rel_id]
                 if not rel_product.empty:
                     rel_product = rel_product.iloc[0]
-                    st.write(f"- **Product ID: {rel_product['id']}**: {clean_description(rel_product['description'])}")
+                    related_products.append(f"- **Product ID: {rel_product['id']}**: {clean_description(rel_product['description'])}")
                 else:
                     logger.warning(f"Related product ID {rel_id} not found in dataset.")
+            if related_products:
+                st.write("\n".join(related_products))
+            else:
+                st.write("No related products found.")
         except Exception as e:
             logger.error(f"Error processing data: {e}")
             st.error("⚠️ Error processing data. Please check the logs for more details.")
