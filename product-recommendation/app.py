@@ -45,7 +45,9 @@ def classify_product(description):
         'comfort': ['comfort', 'soft', 'cozy'],
         'durability': ['durable', 'long-lasting', 'sturdy'],
         'style': ['stylish', 'fashionable', 'trendy'],
-        'performance': ['performance', 'high-performance', 'efficient']
+        'performance': ['performance', 'high-performance', 'efficient'],
+        'lightweight': ['lightweight', 'light', 'portable'],
+        'waterproof': ['waterproof', 'water-resistant', 'rainproof']
     }
     classification = set()
     for key, words in keywords.items():
@@ -83,7 +85,7 @@ if {'id', 'description', 'related', 'classification'}.issubset(products.columns)
             st.write("### 🏷️ Related Products:")
             related_products = products[products['classification'].apply(lambda x: not x.isdisjoint(selected_product['classification'])) & (products['id'] != selected_product['id'])]
             if not related_products.empty:
-                for _, rel_product in related_products.iterrows():
+                for _, rel_product in related_products.head(10).iterrows():  # Limit to top 10 recommendations
                     st.write(f"- **Product ID: {rel_product['id']}**: {clean_description(rel_product['description'])}")
             else:
                 st.write("No related products found.")
