@@ -27,3 +27,4 @@ This is a Streamlit application for recommending products based on a selected ca
 - `requirements.txt`: List of dependencies including BeautifulSoup.
 - `.gitignore`: Git ignore file.
 - `README.md`: Project overview.
+- `sample-data.csv`: Sample dataset with related product IDs.

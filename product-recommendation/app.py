@@ -49,10 +49,6 @@ st.title("🛒 Product Recommendation System")
 st.write("### Sample Product Data:")
 st.dataframe(products.head())  # Show first few rows of the dataset
 
-# Display the entire 'related' column for inspection
-st.write("### Related Column Content:")
-st.write(products['related'].tolist())
-
 # Ensure required columns exist
 if {'id', 'description', 'related'}.issubset(products.columns):
     if not products.empty:
@@ -74,6 +70,7 @@ if {'id', 'description', 'related'}.issubset(products.columns):
             related_products = []
             logger.info(f"Related product IDs for selected product {selected_product['id']}: {selected_product['related']}")
             for rel_id in selected_product['related']:
+                logger.info(f"Checking related product ID: {rel_id}")
                 rel_product = products[products['id'] == rel_id]
                 if not rel_product.empty:
                     rel_product = rel_product.iloc[0]
