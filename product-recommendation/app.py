@@ -40,10 +40,6 @@ st.title("🛒 Product Recommendation System")
 st.write("### Sample Product Data:")
 st.dataframe(products.head())  # Show first few rows of the dataset
 
-# Display dataset columns for debugging
-st.write("### Dataset Columns:")
-st.write(products.columns.tolist())
-
 # Ensure required columns exist
 if {'id', 'description', 'related'}.issubset(products.columns):
     if not products.empty:
@@ -63,6 +59,8 @@ if {'id', 'description', 'related'}.issubset(products.columns):
                 if not rel_product.empty:
                     rel_product = rel_product.iloc[0]
                     st.write(f"- **Product ID: {rel_product['id']}**: {rel_product['description']}")
+                else:
+                    logger.warning(f"Related product ID {rel_id} not found in dataset.")
         except Exception as e:
             logger.error(f"Error processing data: {e}")
             st.error("⚠️ Error processing data. Please check the logs for more details.")
