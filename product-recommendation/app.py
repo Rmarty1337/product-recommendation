@@ -39,8 +39,25 @@ def clean_description(description):
     cleaned_description = soup.get_text(separator=" ").strip()
     return cleaned_description
 
+def classify_product(description):
+    """Classify product based on keywords in the description."""
+    keywords = {
+        'comfort': ['comfort', 'soft', 'cozy'],
+        'durability': ['durable', 'long-lasting', 'sturdy'],
+        'style': ['stylish', 'fashionable', 'trendy'],
+        'performance': ['performance', 'high-performance', 'efficient']
+    }
+    classification = set()
+    for key, words in keywords.items():
+        if any(word in description.lower() for word in words):
+            classification.add(key)
+    return classification
+
 # Load product data
 products = load_data()
+
+# Add classification to products
+products['classification'] = products['description'].apply(lambda x: classify_product(clean_description(x)))
 
 # Streamlit UI setup
 st.title("🛒 Product Recommendation System")
@@ -50,7 +67,7 @@ st.write("### Sample Product Data:")
 st.dataframe(products.head())  # Show first few rows of the dataset
 
 # Ensure required columns exist
-if {'id', 'description', 'related'}.issubset(products.columns):
+if {'id', 'description', 'related', 'classification'}.issubset(products.columns):
     if not products.empty:
         try:
             # User selects a product
@@ -60,25 +77,14 @@ if {'id', 'description', 'related'}.issubset(products.columns):
             selected_product = products[products['id'] == product_id].iloc[0]
             st.write(f"## Product ID: {selected_product['id']}")
             st.write(f"**Description:** {clean_description(selected_product['description'])}")
+            st.write(f"**Classification:** {', '.join(selected_product['classification'])}")
 
-            # Display related product IDs for verification
-            st.write("### Related Product IDs:")
-            st.write(selected_product['related'])
-
-            # Display related products
+            # Display related products based on classification
             st.write("### 🏷️ Related Products:")
-            related_products = []
-            logger.info(f"Related product IDs for selected product {selected_product['id']}: {selected_product['related']}")
-            for rel_id in selected_product['related']:
-                logger.info(f"Checking related product ID: {rel_id}")
-                rel_product = products[products['id'] == rel_id]
-                if not rel_product.empty:
-                    rel_product = rel_product.iloc[0]
-                    related_products.append(f"- **Product ID: {rel_product['id']}**: {clean_description(rel_product['description'])}")
-                else:
-                    logger.warning(f"Related product ID {rel_id} not found in dataset.")
-            if related_products:
-                st.write("\n".join(related_products))
+            related_products = products[products['classification'].apply(lambda x: not x.isdisjoint(selected_product['classification'])) & (products['id'] != selected_product['id'])]
+            if not related_products.empty:
+                for _, rel_product in related_products.iterrows():
+                    st.write(f"- **Product ID: {rel_product['id']}**: {clean_description(rel_product['description'])}")
             else:
                 st.write("No related products found.")
         except Exception as e:
@@ -87,4 +93,4 @@ if {'id', 'description', 'related'}.issubset(products.columns):
     else:
         st.error("⚠️ The dataset is empty. Please check the data source.")
 else:
-    st.error("⚠️ Dataset does not contain the required columns: 'id', 'description', and 'related'.")
+    st.error("⚠️ Dataset does not contain the required columns: 'id', 'description', 'related', and 'classification'.")
