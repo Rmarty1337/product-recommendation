@@ -1,4 +1,3 @@
-
 # Product Recommendation System
 
 This is a Streamlit application for recommending products based on a selected category and product.

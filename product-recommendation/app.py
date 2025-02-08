@@ -30,6 +30,11 @@ def load_data():
         st.error("⚠️ Error loading data. Please check the logs for more details.")
         return pd.DataFrame()
 
+def clean_description(description):
+    """Clean up the product description."""
+    # Add any cleaning steps here, e.g., removing extra whitespace
+    return description.strip()
+
 # Load product data
 products = load_data()
 
@@ -50,7 +55,7 @@ if {'id', 'description', 'related'}.issubset(products.columns):
             # Get selected product details
             selected_product = products[products['id'] == product_id].iloc[0]
             st.write(f"## Product ID: {selected_product['id']}")
-            st.write(f"**Description:** {selected_product['description']}")
+            st.write(f"**Description:** {clean_description(selected_product['description'])}")
 
             # Display related products
             st.write("### 🏷️ Related Products:")
@@ -58,7 +63,7 @@ if {'id', 'description', 'related'}.issubset(products.columns):
                 rel_product = products[products['id'] == rel_id]
                 if not rel_product.empty:
                     rel_product = rel_product.iloc[0]
-                    st.write(f"- **Product ID: {rel_product['id']}**: {rel_product['description']}")
+                    st.write(f"- **Product ID: {rel_product['id']}**: {clean_description(rel_product['description'])}")
                 else:
                     logger.warning(f"Related product ID {rel_id} not found in dataset.")
         except Exception as e:
