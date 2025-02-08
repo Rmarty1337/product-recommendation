@@ -60,6 +60,10 @@ if {'id', 'description', 'related'}.issubset(products.columns):
             st.write(f"## Product ID: {selected_product['id']}")
             st.write(f"**Description:** {clean_description(selected_product['description'])}")
 
+            # Display related product IDs for verification
+            st.write("### Related Product IDs:")
+            st.write(selected_product['related'])
+
             # Display related products
             st.write("### 🏷️ Related Products:")
             related_products = []
