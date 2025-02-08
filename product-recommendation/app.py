@@ -60,9 +60,14 @@ if {'id', 'description', 'related'}.issubset(products.columns):
             st.write(f"## Product ID: {selected_product['id']}")
             st.write(f"**Description:** {clean_description(selected_product['description'])}")
 
+            # Display related product IDs for verification
+            st.write("### Related Product IDs:")
+            st.write(selected_product['related'])
+
             # Display related products
             st.write("### 🏷️ Related Products:")
             related_products = []
+            logger.info(f"Related product IDs for selected product {selected_product['id']}: {selected_product['related']}")
             for rel_id in selected_product['related']:
                 rel_product = products[products['id'] == rel_id]
                 if not rel_product.empty:
