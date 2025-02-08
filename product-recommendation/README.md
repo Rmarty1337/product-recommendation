@@ -37,5 +37,3 @@ This is a Streamlit application for recommending products based on a selected pr
 - `.gitignore`: Git ignore file.
 - `README.md`: Project overview.
 ```
-
-These updates simplify the code and make the README more user-friendly and easier to understand. The application now focuses on the core functionality of loading data, cleaning descriptions, classifying products, and recommending related products based on similar classifications.
