@@ -63,6 +63,7 @@ if {'id', 'description', 'related'}.issubset(products.columns):
             # Display related products
             st.write("### 🏷️ Related Products:")
             related_products = []
+            logger.info(f"Related product IDs for selected product {selected_product['id']}: {selected_product['related']}")
             for rel_id in selected_product['related']:
                 rel_product = products[products['id'] == rel_id]
                 if not rel_product.empty:
