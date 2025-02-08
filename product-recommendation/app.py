@@ -25,6 +25,7 @@ def load_data():
         else:
             df['related'] = [[]] * len(df)  # Default empty lists if column is missing
         
+        logger.info(f"Related column content: {df['related'].tolist()}")  # Log the content of the 'related' column
         return df
     except Exception as e:
         logger.error(f"Error loading data: {e}")
@@ -47,6 +48,10 @@ st.title("🛒 Product Recommendation System")
 # Display a preview of the dataset
 st.write("### Sample Product Data:")
 st.dataframe(products.head())  # Show first few rows of the dataset
+
+# Display the entire 'related' column for inspection
+st.write("### Related Column Content:")
+st.write(products['related'].tolist())
 
 # Ensure required columns exist
 if {'id', 'description', 'related'}.issubset(products.columns):
